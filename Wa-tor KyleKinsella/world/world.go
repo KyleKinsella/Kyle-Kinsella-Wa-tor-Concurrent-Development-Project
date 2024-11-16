@@ -10,7 +10,41 @@ const (
 	Red     = "\033[31m"
 	Blue    = "\033[34m"
 	Black   = "\033[30m"
+
+	//testing only
+	Yellow = "\033[33m"
 )
+
+func makeGrid(rows, cols int) [][]string {
+	grid := make([][]string, rows)
+	for i := range grid {
+		grid[i] = make([]string, cols)
+		for j := range grid[i] {
+			random := rand.Float64()
+			if random < 0.1 { // 10% chance of a shark
+				grid[i][j] = Red + "S" + Reset
+			} else if random < 0.4 { // 40% chance of a fish
+				grid[i][j] = Blue + "F" + Reset
+			} else { // 50% chance of a empty water
+				grid[i][j] = Black + "_" + Reset
+			}
+		}
+	}
+	return grid
+}
+
+func findAFish(grid[][]string) [][]int {
+	pos := [][]int{}
+	for i := range grid {
+		for j := range grid[i] {
+			if grid[i][j] == Blue + "F" + Reset {
+				// fmt.Println("Fish found at:", i, j)
+				pos = append(pos, []int{i,j})
+			}
+		}
+	}
+	return pos
+}
 
 func gameMessage() {
 	// Adding colors to strings with ANSI codes
@@ -23,30 +57,11 @@ func gameMessage() {
 }
 
 func main() {
-	rows := 30
-	cols := 60
-	grid := make([][]string, rows)	
-	for i := range grid { // 0-29
-		grid[i] = make([]string, cols) // Create a slice for each row
-	}
+	rows := 2
+	cols := 2
+	grid := makeGrid(rows, cols)
 
-	data := []string{Red + "S" + Reset, Blue + "F" + Reset, Black + "EW" + Reset}	
-	// this code puts a random value into the 2d-array
-	for _, value := range data {
-		place := false
-		for !place {
-			placeRandomRow := rand.Intn(rows)
-			placeRandomCol := rand.Intn(cols)
-
-			if grid[placeRandomRow][placeRandomCol] == "" {
-				grid[placeRandomRow][placeRandomCol] = value
-				place = true
-			} else {
-				place = false
-			}
-		}
-	}
-
+	data := []string{Red + "S" + Reset, Blue + "F" + Reset, Black + "_" + Reset}	
 	for i:=0; i<rows; i++ {
 		for j:=0; j<cols; j++ {
 			if grid[i][j] == "" {
@@ -60,7 +75,10 @@ func main() {
 	}
 	
 	gameMessage()
+	// fmt.Println("below is the inital grid")
 	for i := range len(grid) {
 		fmt.Println(grid[i])
-	}
+	}	
+	fishPositions := findAFish(grid)
+	fmt.Println("Fish found at:", fishPositions)
 }
