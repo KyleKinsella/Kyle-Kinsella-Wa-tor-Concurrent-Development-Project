@@ -21,11 +21,11 @@ var (
 
 	grid  [][]string
 	energy int
-
 	gameOver bool
 
 	rows         = 30
 	cols         = 30
+	GameOver = "Game Over"
 )
 
 func makeGrid(rows, cols int) [][]string {
@@ -52,14 +52,15 @@ func initGrid() {
 	grid[0][0] = Shark // Place my shark
 }
 
+// Move the shark based on logic
 func moveShark(grid [][]string, rows, cols int) {
 	for x := 0; x < rows; x++ {
 		for y := 0; y < cols; y++ {
 			if grid[x][y] == Shark {
 				// Randomize shark movement
-				dx := rand.Intn(3) - 1 // -1, 0, or 1
+				dx := rand.Intn(3) -1 // -1, 0, or 1
 				time.Sleep(200)
-				dy := rand.Intn(3) - 1
+				dy := rand.Intn(3) -1
 
 				newX := x+dx
 				newY := y+dy
@@ -107,7 +108,36 @@ func haveEmptyWater(grid [][]string, rows, cols int) bool {
 	return false
 }
 
+// Move the shark based on logic
+func moveFish(grid [][]string, rows, cols int) {
+	for x := 1; x < rows-1; x++ {
+		for y := 1; y < cols-1; y++ {
+			if grid[x][y] == Fish {
+				// Randomize shark movement
+				dx := rand.Intn(3) - 1 // -1, 0, or 1
+				time.Sleep(500)
+				dy := rand.Intn(3) - 1
+
+				newX := x+dx
+				newY := y+dy
+				if newX >= 0 && newX < rows && newY >= 0 && newY < cols {
+					if grid[newX][newY] == Fish {
+						// The shark eats the fish
+						energy++
+						fmt.Println("fish has moved...")
+					} 
+					// Move shark to new position
+					grid[x][y] = EmptyWater
+					grid[newX][newY] = Fish
+				}
+				// return
+			}
+		}
+	}
+}
+
 func main() {
 	initGrid()
 	moveShark(grid, rows, cols)
+	moveFish(grid, rows, cols)
 }
