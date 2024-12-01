@@ -1,18 +1,20 @@
 # Wa-tor Project, Made by Kyle Kinsella | C00273146
 
 # What is wa-tor?
-### Wa-tor is a population dynamics simulation. The planet of wa-tor is shaped like a torus and it is entirely covered with water. There are two types of animals in the world of wa-tor, Fish and Sharks.
+### Wa-tor is a population dynamics simulation. The planet of wa-tor is shaped like a torus and it is entirely covered with water. There are two types of animals in the world of wa-tor, Fish and Sharks. For more information see here: https://en.wikipedia.org/wiki/Wa-Tor
 
 # Rules for fish
-### 1. ...<br>
-### 2. ...<br>
+### 1. At each chronon, a fish moves randomly to one of the adjacent unoccupied squares. If there are no free squares, no movement takes place.<br>
+### 2. Once a fish has survived a certain number of chronons it may reproduce. This is done as it moves to a neighbouring square, leaving behind a new fish in its old position. Its reproduction time is also reset to zero.<br>
 
 # Rules for sharks
-### 1. ...<br>
-### 2. ...<br>
-### 3. ...<br>
-### 4. ...<br>
-### 5. 
+### 1. At each chronon, a shark moves randomly to an adjacent square occupied by a fish. If there is none, the shark moves to a random adjacent unoccupied square. If there are no free squares, no movement takes place.<br>
+### 2. At each chronon, each shark is deprived of a unit of energy.<br>
+### 3. Upon reaching zero energy, a shark dies.<br>
+### 4. If a shark moves to a square occupied by a fish, it eats the fish and earns a certain amount of energy.<br>
+### 5. Once a shark has survived a certain number of chronons it may reproduce in exactly the same way as the fish.
+
+# I was not able to do the reproduction for the fish and sharks due to me not having enough time. 
 
 # Below is an image of my wa-tor project:
 <!-- ![Dining Philosophers](images/diningPhi.png) -->
