@@ -16,7 +16,7 @@
 
 # I was not able to do the reproduction for the fish and sharks due to me not having enough time. 
 
-# Below is an image of my wa-tor project:
+# Below is a video of my wa-tor project running:
 ![Kyle Kinsella Wa-tor simulation project](assets/kylekwa-torproject.gif)
 
 # How to run my code
