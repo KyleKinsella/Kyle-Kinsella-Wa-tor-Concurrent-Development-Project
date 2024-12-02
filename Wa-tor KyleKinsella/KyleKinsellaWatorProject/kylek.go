@@ -4,6 +4,10 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
+	"image/color"
+	"log"
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"	
 )
 
 const (
@@ -21,11 +25,15 @@ var (
 
 	grid  [][]string
 	energy int
+
 	gameOver bool
+	GameOver = "Game Over"
 
 	rows         = 30
 	cols         = 30
-	GameOver = "Game Over"
+	screenWidth  = 600
+	screenHeight = 600
+	cellSize     = screenWidth / cols
 )
 
 func makeGrid(rows, cols int) [][]string {
@@ -108,6 +116,17 @@ func haveEmptyWater(grid [][]string, rows, cols int) bool {
 	return false
 }
 
+func emptyGrid(grid [][]string, rows, cols int) bool {
+	for i := 0; i<rows; i++ {
+		for j := 0; j<cols; j++ {
+			if grid[i][j] == Fish {
+				return false
+			}
+		}
+	}
+	return true
+}
+
 // Move the shark based on logic
 func moveFish(grid [][]string, rows, cols int) {
 	for x := 1; x < rows-1; x++ {
@@ -136,8 +155,72 @@ func moveFish(grid [][]string, rows, cols int) {
 	}
 }
 
-func main() {
-	initGrid()
+// Game implements the ebiten.Game interface
+type Game struct{}
+
+// Update is called 60 times per second
+func (g *Game) Update() error {
+
+	if gameOver {
+		return nil
+	}
+
+	if emptyGrid(grid, rows, cols) {
+		gameOver = true
+		fmt.Println(GameOver)
+	}
+
 	moveShark(grid, rows, cols)
 	moveFish(grid, rows, cols)
+	return nil
+}
+
+// Draw renders the game screen
+func (g *Game) Draw(screen *ebiten.Image) {
+	// Draw the grid
+	for x := 0; x < rows; x++ {
+		for y := 0; y < cols; y++ {
+			rectX := y * cellSize
+			rectY := x * cellSize
+
+			var col color.Color
+			switch grid[x][y] {
+			case Shark:
+				col = color.RGBA{255, 0, 0, 255} // Red 
+			case Fish:
+				col = color.RGBA{0, 0, 255, 255} // Blue
+			default:
+				col = color.RGBA{0, 0, 0, 0} // Black
+			}
+
+			// Draw cell as a filled rectangle
+			ebitenutil.DrawRect(screen, float64(rectX), float64(rectY), float64(cellSize), float64(cellSize), col)
+
+			if gameOver {
+				ebitenutil.DebugPrint(screen, "Game Over")
+				return
+			}		
+		}
+	}
+	// Display the sharks energy level
+	ebitenutil.DebugPrint(screen, fmt.Sprintf("Sharks energy is: %d", energy))
+}
+
+// Layout specifies the screen dimensions
+func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
+	return screenWidth, screenHeight
+}
+
+func main() {
+	initGrid()
+	
+	// Create a new game instance
+	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowTitle("Kyle Kinsella | C00273146 Wa-Tor Simulation Project")
+	game := &Game{}
+
+	// run my wa-tor project
+	if err := ebiten.RunGame(game); err != nil {
+		log.Fatal(err)
+	}
 }
