@@ -32,6 +32,7 @@ var (
 	cols         = 30
 	screenWidth  = 600
 	screenHeight = 600
+	threads = 0
 	cellSize     = screenWidth / cols
 )
 
@@ -244,10 +245,52 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 func main() {
 	// call the initGrid method to set up my grid 
 	initGrid()
-	
+
+	fmt.Printf("How big do you want your screen width to be?\n")
+	fmt.Scan(&screenWidth)
+	userInputWidth := screenWidth
+
+	fmt.Println("How big do you want your screen height to be?")
+	fmt.Scan(&screenHeight)
+	userInputHeight := screenHeight
+
+	var userInputRows int
+	fmt.Println("How many rows do you want in your grid?")
+	fmt.Scan(&userInputRows)
+	userInputRows = rows
+
+	var userInputCols int
+	fmt.Println("How many cols do you want in your grid?")
+	fmt.Scan(&userInputCols)
+	userInputCols = cols
+
+	var userInputThreads int
+	fmt.Println("How many threads do you want to use?")
+	fmt.Scan(&threads)
+	userInputThreads = threads
+
+	fmt.Println("--------------------------------------------")
+	fmt.Println("The width of the screen is:", userInputWidth)
+	fmt.Println("The height of the screen is:", userInputHeight)
+	fmt.Println("Amount of rows is:", userInputRows)
+	fmt.Println("Amount of cols is:", userInputCols)
+	fmt.Println("Amount of threads in use is:", userInputThreads)
+	fmt.Println("--------------------------------------------")
+
+	for runtime := 0; runtime < userInputThreads; runtime++ {
+		// here i get the current local time 
+		now := time.Now()
+
+		// I show how long it takes to run the program at the end of the main function
+		defer func() {
+			fmt.Println("time it took to run", userInputThreads, "thread(s) was", time.Since(now))
+		}()
+	}
+
 	// Create a new game instance
-	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowSize(userInputWidth, userInputHeight)
 	ebiten.SetWindowTitle("Kyle Kinsella | C00273146 Wa-Tor Simulation Project")
+	
 	// make a game object, this uses the ebiten game interface
 	game := &Game{}
 
