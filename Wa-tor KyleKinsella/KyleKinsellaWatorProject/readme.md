@@ -17,7 +17,7 @@
 # I was not able to do the reproduction for the fish and sharks due to me not having enough time. 
 
 # Below is an image of my wa-tor project:
-<!-- ![Dining Philosophers](images/diningPhi.png) -->
+![Kyle Kinsella Wa-tor simulation project](assets/kylekwa-torproject.gif)
 
 # How to run my code
 ### To run my code you must do the following:
