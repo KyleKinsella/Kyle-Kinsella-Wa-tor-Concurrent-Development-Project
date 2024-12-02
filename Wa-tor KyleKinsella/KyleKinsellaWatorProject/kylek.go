@@ -27,8 +27,7 @@ var (
 	energy int
 
 	gameOver bool
-	GameOver = "Game Over"
-
+	
 	rows         = 30
 	cols         = 30
 	screenWidth  = 600
@@ -36,6 +35,7 @@ var (
 	cellSize     = screenWidth / cols
 )
 
+// this function will make a 2d grid of fish, sharks and empty water
 func makeGrid(rows, cols int) [][]string {
 		grid := make([][]string, rows)
 		for i := range grid {
@@ -54,13 +54,15 @@ func makeGrid(rows, cols int) [][]string {
 		return grid
 }
 
-// Initialize the grid with default values and place my shark, fish and empty water
+// Initialize the grid with default values and place my shark
 func initGrid() {
 	grid = makeGrid(rows, cols)
 	grid[0][0] = Shark // Place my shark
+	// give my shark an energy level
+	energy = 300
 }
 
-// Move the shark based on logic
+// this function moves my shark within my 2d grid
 func moveShark(grid [][]string, rows, cols int) {
 	for x := 0; x < rows; x++ {
 		for y := 0; y < cols; y++ {
@@ -70,13 +72,17 @@ func moveShark(grid [][]string, rows, cols int) {
 				time.Sleep(200)
 				dy := rand.Intn(3) -1
 
+				// here I add the value of x to the random spot to where the shark has moved(dx)
 				newX := x+dx
+				// here I add the value of y to the random spot to where the shark has moved(dy)
 				newY := y+dy
+
+				// Perform a boundary check to ensure the coordinates are within the 2D grid
 				if newX >= 0 && newX < rows && newY >= 0 && newY < cols {
+					// this if statement check to see if a shark has found a fish within the grid
 					if grid[newX][newY] == Fish {
-						// The shark eats the fish
+						// The shark eats the fish, give him so energy
 						energy++
-						energy = 100
 						fmt.Println("Shark ate a fish! Energy level is:", energy)
 					} 							
 					// Move shark to new position
@@ -84,8 +90,11 @@ func moveShark(grid [][]string, rows, cols int) {
 					grid[newX][newY] = Shark
 				}
 				// fish is not found deprive the shark of a unit of energy.
-				if haveEmptyWater(grid, x, y) {
+				if haveEmptyWater(grid, x, y) { // if this function gives us true then I do the following
+					// if we are at a spot in the grid and it is not empty water, then we have not found a fish so remove some 
+					// energy from the shark
 					if grid[x][y] != EmptyWater {
+						// remove some energy from the shark
 						energy = energy - 1
 
 						// end the game because shark cannot have negative energy
@@ -99,57 +108,70 @@ func moveShark(grid [][]string, rows, cols int) {
 						break
 					} 
 				} 
-				// return
 			}
 		}
 	}
 }
 
+// this function checks to see if my grid has empty water
 func haveEmptyWater(grid [][]string, rows, cols int) bool {
 	for i := 0; i<rows; i++ {
 		for j := 0; j<cols; j++ {
+			// I check to see if there is empty water at an index within the 2d grid
 			if grid[i][j] == EmptyWater {
+				// yes there is empty water
 				return true
 			}
 		}
 	}
+	// no there is not empty water 
 	return false
 }
 
+// this function checks to see if my grid has a fish
 func emptyGrid(grid [][]string, rows, cols int) bool {
 	for i := 0; i<rows; i++ {
 		for j := 0; j<cols; j++ {
+			// I check to see if there is a fish in the 2d grid
 			if grid[i][j] == Fish {
+				// grid is not empty
 				return false
 			}
 		}
 	}
+	// grid is empty
 	return true
 }
 
-// Move the shark based on logic
+// this function moves my fish within my 2d grid
 func moveFish(grid [][]string, rows, cols int) {
+	// here I am doing a diffrent loop compared to my move shark, this is because if I have my move fish the same as my move shark,
+	// my fish were eating my sharks, I tried to fix this for hours but could not fix this, this is why my loops are diffrent. As a result this means 
+	// my fish on the edges do not move.
 	for x := 1; x < rows-1; x++ {
 		for y := 1; y < cols-1; y++ {
 			if grid[x][y] == Fish {
-				// Randomize shark movement
+				// Randomize fish movement
 				dx := rand.Intn(3) - 1 // -1, 0, or 1
 				time.Sleep(500)
 				dy := rand.Intn(3) - 1
-
+				
+				// here I add the value of x to the random spot to where the shark has moved(dx)
 				newX := x+dx
+				// here I add the value of y to the random spot to where the shark has moved(dy)
 				newY := y+dy
+
+				// Perform a boundary check to ensure the coordinates are within the 2D grid
 				if newX >= 0 && newX < rows && newY >= 0 && newY < cols {
+					// this if statement check to see if a fish is in the grid
 					if grid[newX][newY] == Fish {
-						// The shark eats the fish
-						energy++
+						// fish has moved
 						fmt.Println("fish has moved...")
 					} 
-					// Move shark to new position
+					// Move fish to new position
 					grid[x][y] = EmptyWater
 					grid[newX][newY] = Fish
 				}
-				// return
 			}
 		}
 	}
@@ -161,16 +183,19 @@ type Game struct{}
 // Update is called 60 times per second
 func (g *Game) Update() error {
 
+	// if my gameOver variable is true then end the game 
 	if gameOver {
 		return nil
 	}
 
+	// I call my emptyGrid function, if this returns a true then we end the game
 	if emptyGrid(grid, rows, cols) {
 		gameOver = true
-		fmt.Println(GameOver)
 	}
 
+	// call my shark function
 	moveShark(grid, rows, cols)
+	// call my fish function
 	moveFish(grid, rows, cols)
 	return nil
 }
@@ -180,22 +205,27 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	// Draw the grid
 	for x := 0; x < rows; x++ {
 		for y := 0; y < cols; y++ {
+			// here I calculate the size of the cell for each y value
 			rectX := y * cellSize
+			// here I calculate the size of the cell for each x value
 			rectY := x * cellSize
 
+			// this is how I set up the color for my shark, fish and empty water
 			var col color.Color
+
 			switch grid[x][y] {
 			case Shark:
-				col = color.RGBA{255, 0, 0, 255} // Red 
+				col = color.RGBA{255, 0, 0, 255} // Red: shark
 			case Fish:
-				col = color.RGBA{0, 0, 255, 255} // Blue
+				col = color.RGBA{0, 0, 255, 255} // Blue: fish
 			default:
-				col = color.RGBA{0, 0, 0, 0} // Black
+				col = color.RGBA{0, 0, 0, 0} // Black: empty water
 			}
 
 			// Draw cell as a filled rectangle
 			ebitenutil.DrawRect(screen, float64(rectX), float64(rectY), float64(cellSize), float64(cellSize), col)
 
+			// if this is true show game over screen to user
 			if gameOver {
 				ebitenutil.DebugPrint(screen, "Game Over")
 				return
@@ -206,17 +236,19 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("Sharks energy is: %d", energy))
 }
 
-// Layout specifies the screen dimensions
+// this function returns the size of the screen width and height
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 	return screenWidth, screenHeight
 }
 
 func main() {
+	// call the initGrid method to set up my grid 
 	initGrid()
 	
 	// Create a new game instance
 	ebiten.SetWindowSize(screenWidth, screenHeight)
 	ebiten.SetWindowTitle("Kyle Kinsella | C00273146 Wa-Tor Simulation Project")
+	// make a game object, this uses the ebiten game interface
 	game := &Game{}
 
 	// run my wa-tor project
