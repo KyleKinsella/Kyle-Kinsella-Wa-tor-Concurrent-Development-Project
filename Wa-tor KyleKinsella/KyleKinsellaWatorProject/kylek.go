@@ -8,6 +8,8 @@ import (
 	"log"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"	
+
+	"sync"
 )
 
 const (
@@ -34,6 +36,8 @@ var (
 	screenHeight = 600
 	threads = 0
 	cellSize     = screenWidth / cols
+
+	mute sync.Mutex
 )
 
 // this function will make a 2d grid of fish, sharks and empty water
@@ -83,7 +87,13 @@ func moveShark(grid [][]string, rows, cols int) {
 					// this if statement check to see if a shark has found a fish within the grid
 					if grid[newX][newY] == Fish {
 						// The shark eats the fish, give him so energy
+						
+						// here I lock my mutex to ensure that only one thread gets access at a time
+						mute.Lock()
 						energy++
+						mute.Unlock()
+						// here I unlock my mutex to allow another thread to get access to this part of the code
+
 						fmt.Println("Shark ate a fish! Energy level is:", energy)
 					} 							
 					// Move shark to new position
@@ -96,7 +106,12 @@ func moveShark(grid [][]string, rows, cols int) {
 					// energy from the shark
 					if grid[x][y] != EmptyWater {
 						// remove some energy from the shark
+						
+						// here I lock my mutex to ensure that only one thread gets access at a time
+						mute.Lock()
 						energy = energy - 1
+						mute.Unlock()
+						// here I unlock my mutex to allow another thread to get access to this part of the code
 
 						// end the game because shark cannot have negative energy
 						if energy < 0 {
