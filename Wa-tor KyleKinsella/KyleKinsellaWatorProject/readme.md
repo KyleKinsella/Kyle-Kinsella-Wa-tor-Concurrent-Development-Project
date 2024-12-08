@@ -19,6 +19,9 @@
 # Below is a video of my wa-tor project running:
 ![Kyle Kinsella Wa-tor simulation project](assets/kylekwa-torproject.gif)
 
+# Below is a video of me showing my documentation with godocs:
+![Kyle Kinsella Wa-tor documentation using godocs](assets/kylekwa-torprojectgodocs.gif)
+
 # How to run my code
 ### To run my code you must do the following:
 #### 1. Download my go file
