@@ -22,6 +22,18 @@
 # Below is a video of me showing my documentation with godocs:
 ![Kyle Kinsella Wa-tor documentation using godocs](assets/kylekwa-torprojectgodocs.gif)
 
+# If you already have godocs installed you can run the below command, below are the commands to get up and going with godocs
+### godoc -http :8080
+### navigate to your browser and look up localhost:8080 
+### search for "KyleKinsellaWatorProject", then click into there and then you will see my docs for my wa-tor project.
+
+# If you don't have godocs here is how to get it installed:
+### 1. go into a project that you wish to document 
+### 2. open a terminal and enter this command: "go install golang.org/x/tools/cmd/godoc@latest"
+### 3. then you can enter this command: "godoc -http :8080"
+### 4. navigate to your browser and look up localhost:8080 
+### 5. search for "KyleKinsellaWatorProject", then click into there and then you will see my docs for my wa-tor project.
+
 # How to run my code
 ### To run my code you must do the following:
 #### 1. Download my go file
