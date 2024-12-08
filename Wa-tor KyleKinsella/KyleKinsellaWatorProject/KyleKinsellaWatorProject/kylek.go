@@ -1,4 +1,4 @@
-package main
+package KyleKinsellaWatorProject
 
 import (
 	"fmt"
@@ -21,7 +21,7 @@ const (
 )
 
 var (
-	Fish = Blue + "F" + Reset
+	Fish string = Blue + "F" + Reset
 	Shark string = Red + "S" + Reset
 	EmptyWater string = Black + "_" + Reset
 
