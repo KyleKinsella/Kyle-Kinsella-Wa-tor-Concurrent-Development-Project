@@ -34,8 +34,7 @@
 ### 4. navigate to your browser and look up localhost:8080 
 ### 5. search for "KyleKinsellaWatorProject", then click into there and then you will see my docs for my wa-tor project.
 
-# I watched this YouTube video on how to get started with godocs:
-<a href="https://www.youtube.com/watch?v=80VT3xexcWs&t=96s">
+# I watched this YouTube video on how to get started with godocs: https://www.youtube.com/watch?v=80VT3xexcWs&t=96s
 
 # How to run my code
 ### To run my code you must do the following:
